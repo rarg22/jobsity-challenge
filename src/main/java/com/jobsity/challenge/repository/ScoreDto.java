@@ -9,7 +9,10 @@ import lombok.Data;
 public class ScoreDto {
 
     private String player;
-    private int score;
-    private boolean isFoul;
-    
+    private String value;
+
+   public ScoreDto(String player, String value) {
+        this.player = player;
+        this.value = value;//
+    }
 }
