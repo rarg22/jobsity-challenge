@@ -21,12 +21,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * FileScoreRepositoryImpl
  */
 
 @Lazy
 @Primary
+@Slf4j
 @Repository
 @Qualifier("file")
 @ConditionalOnProperty(name = "ftr")
@@ -34,10 +37,12 @@ public class FileScoreRepositoryImpl implements ScoreRepository {
 
     @Value("${ftr: }")
     private String fileToRead;
+
+    // @Autowired
+    // @Qualifier("text")
     private ScoreFileParser scoreFileParser;
 
     @Autowired
-
     public FileScoreRepositoryImpl(@Qualifier("text") ScoreFileParser scoreFileParser) {
         this.scoreFileParser = scoreFileParser;
 
@@ -57,10 +62,9 @@ public class FileScoreRepositoryImpl implements ScoreRepository {
     private List<Score> mapScores(List<ScoreDto> scoreDtos) {
         Map<String, List<ScoreDto>> scoresByPlayer = scoreDtos.stream()
                 .collect(Collectors.groupingBy(ScoreDto::getPlayer));
-
         List<Score> scores = new ArrayList<>();
         for (Map.Entry<String, List<ScoreDto>> entry : scoresByPlayer.entrySet()) {
-            scoreDtos.forEach((sdtos) -> {
+            entry.getValue().forEach((sdtos) -> {
                 boolean isFoul = (sdtos.getValue().equals("F"));
                 scores.add(new Score(
                         // map to Player
