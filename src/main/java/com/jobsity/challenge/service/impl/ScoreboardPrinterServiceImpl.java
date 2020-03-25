@@ -59,7 +59,7 @@ public class ScoreboardPrinterServiceImpl implements ScoreboardPrinterService {
                     String scoreStr1 = (scores.get(0).isFoul()) ? "F" : (scores.get(0).getValue() == 10) ? "X" : String.valueOf(scores.get(0).getValue());
                     String scoreStr2 = (scores.get(1).isFoul()) ? "F" : (scores.get(1).getValue() == 10) ? "X" : String.valueOf(scores.get(1).getValue());
                     String scoreStr3 = (scores.get(2).isFoul()) ? "F" : (scores.get(2).getValue() == 10) ? "X" : String.valueOf(scores.get(2).getValue());
-                    displayStr = String.format("\t\t%s\t%s\t%s", scoreStr1, scoreStr2, scoreStr3);
+                    displayStr = String.format("\t%s\t%s\t%s", scoreStr1, scoreStr2, scoreStr3);
                 }
                 sb.append(displayStr);
             }
