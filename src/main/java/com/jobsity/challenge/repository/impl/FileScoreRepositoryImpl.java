@@ -21,15 +21,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * FileScoreRepositoryImpl
  */
 
 @Lazy
 @Primary
-@Slf4j
 @Repository
 @Qualifier("file")
 @ConditionalOnProperty(name = "ftr")

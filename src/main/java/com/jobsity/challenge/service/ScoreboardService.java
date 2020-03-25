@@ -7,8 +7,6 @@ import com.jobsity.challenge.domain.Scoreboard;
  */
 public interface ScoreboardService {
 
-    public void print(Scoreboard scoreboard);
-
     public Scoreboard getScoreboard();
 
 }
