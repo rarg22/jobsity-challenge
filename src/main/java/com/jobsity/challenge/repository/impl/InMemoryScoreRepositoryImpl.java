@@ -1,10 +1,9 @@
 package com.jobsity.challenge.repository.impl;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.jobsity.challenge.domain.Score;
-import com.jobsity.challenge.exception.BadScoreInputException;
 import com.jobsity.challenge.repository.ScoreRepository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,9 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InMemoryScoreRepositoryImpl implements ScoreRepository {
     @Override
-    public List<Score> getScores() throws BadScoreInputException {
+    public  List<Score> getScores() {
         log.info("reading from memory");
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
 }

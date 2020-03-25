@@ -1,10 +1,19 @@
 package com.jobsity.challenge.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.jobsity.challenge.domain.Player;
 import com.jobsity.challenge.domain.Score;
+import com.jobsity.challenge.exception.BadInputFileException;
+import com.jobsity.challenge.exception.ScoreRepositoryException;
+import com.jobsity.challenge.repository.ScoreDto;
 import com.jobsity.challenge.repository.ScoreRepository;
+import com.jobsity.challenge.util.ScoreFileParser;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,20 +35,39 @@ public class FileScoreRepositoryImpl implements ScoreRepository {
     @Value("${ftr: }")
     private String fileToRead;
 
-    // @Autowired
-    // private ScoreFileParser fileParser;
+    @Autowired
+    @Qualifier("text")
+    private ScoreFileParser txtFileParser;
 
     @Override
     public List<Score> getScores() {
-        // try {
+        try {
+            List<ScoreDto> scoreDtos = txtFileParser.parse(fileToRead);
+            return mapScores(scoreDtos);
 
-        //     List<ScoreDto> scores = fileParser.parse(fileToRead);
+        } catch (BadInputFileException e) {
+            throw new ScoreRepositoryException(e.getCause());
+        }
+    }
 
-        // } catch (Exception ex) {
-        //     ex.printStackTrace();
-        // }
+    private List<Score> mapScores(List<ScoreDto> scoreDtos) {
+        Map<String, List<ScoreDto>> scoresByPlayer = scoreDtos.stream()
+                .collect(Collectors.groupingBy(ScoreDto::getPlayer));
 
-        return null;
+        List<Score> scores = new ArrayList<>();
+        for (Map.Entry<String, List<ScoreDto>> entry : scoresByPlayer.entrySet()) {
+            scoreDtos.forEach((sdtos) -> {
+                boolean isFoul = (sdtos.getValue().equals("F"));
+                scores.add(new Score(
+                        // map to Player
+                        new Player(entry.getKey()),
+                        // parse int, 0 if is foul
+                        (isFoul) ? 0 : Integer.parseInt(sdtos.getValue()),
+                        // set foul flag
+                        isFoul));
+            });
+        }
+        return scores;
     }
 
 }

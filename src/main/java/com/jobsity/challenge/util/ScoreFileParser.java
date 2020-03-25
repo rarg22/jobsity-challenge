@@ -2,9 +2,8 @@ package com.jobsity.challenge.util;
 
 import java.util.List;
 
+import com.jobsity.challenge.exception.BadInputFileException;
 import com.jobsity.challenge.repository.ScoreDto;
-
-import org.springframework.stereotype.Component;
 
 /**
  * FileParser
@@ -12,5 +11,5 @@ import org.springframework.stereotype.Component;
 
 public interface ScoreFileParser {
 
-    public List<ScoreDto> parse(String fileToRead);
+    public List<ScoreDto> parse(String fileToRead) throws BadInputFileException;
 }
