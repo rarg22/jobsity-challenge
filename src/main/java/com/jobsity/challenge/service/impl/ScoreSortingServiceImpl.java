@@ -11,6 +11,7 @@ import com.jobsity.challenge.domain.Player;
 import com.jobsity.challenge.domain.Score;
 import com.jobsity.challenge.service.ScoreSortingService;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  * ScoreSortingServiceImpl
  */
 @Service
+@Primary
 @Slf4j
 public class ScoreSortingServiceImpl implements ScoreSortingService {
 
@@ -34,7 +36,6 @@ public class ScoreSortingServiceImpl implements ScoreSortingService {
             playerFrames.addAll(getFrames());
             int currentFrame = 1;
             // loop over scores to assign to corresponding frame.
-            log.debug("Scores: " + playerScores.toString());
             for (Score playerScore : playerScores) {
                 // get current frame and add the current score
                 Frame frame = playerFrames.get(currentFrame - 1);

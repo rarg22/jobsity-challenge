@@ -18,4 +18,8 @@ public class Scoreboard {
         this.scoreboard = new HashMap<>();
     }
 
+    public Scoreboard(Map<Player, List<Frame>> scoreboard) {
+        this.scoreboard = scoreboard;
+    }
+
 }

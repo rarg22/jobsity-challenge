@@ -16,10 +16,11 @@ import com.jobsity.challenge.util.ScoreFileParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * FileScoreRepositoryImpl
@@ -29,20 +30,17 @@ import org.springframework.stereotype.Repository;
 @Primary
 @Repository
 @Qualifier("file")
-@ConditionalOnProperty(name = "ftr")
+@Slf4j
 public class FileScoreRepositoryImpl implements ScoreRepository {
 
     @Value("${ftr: }")
     private String fileToRead;
 
-    // @Autowired
-    // @Qualifier("text")
     private ScoreFileParser scoreFileParser;
 
     @Autowired
     public FileScoreRepositoryImpl(@Qualifier("text") ScoreFileParser scoreFileParser) {
         this.scoreFileParser = scoreFileParser;
-
     }
 
     @Override
@@ -50,7 +48,6 @@ public class FileScoreRepositoryImpl implements ScoreRepository {
         try {
             List<ScoreDto> scoreDtos = scoreFileParser.parse(fileToRead);
             return mapScores(scoreDtos);
-
         } catch (BadInputFileException e) {
             throw new ScoreRepositoryException(e.getCause());
         }

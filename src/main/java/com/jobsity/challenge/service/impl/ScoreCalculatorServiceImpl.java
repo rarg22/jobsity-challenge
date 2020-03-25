@@ -5,12 +5,14 @@ import java.util.List;
 import com.jobsity.challenge.domain.Frame;
 import com.jobsity.challenge.service.ScoreCalculatorService;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
  * ScoreCalculatorServiceImpl
  */
 @Service
+@Primary
 public class ScoreCalculatorServiceImpl implements ScoreCalculatorService {
     @Override
     public void calculateFrameScores(List<Frame> frames) {

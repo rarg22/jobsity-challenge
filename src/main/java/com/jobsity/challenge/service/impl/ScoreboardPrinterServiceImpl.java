@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ScoreboardPrinterServiceImpl implements ScoreboardPrinterService {
+   
     @Override
     public void print(Scoreboard scoreboard) {
         String scoreboardDisplay = createConsoleScoreboardDisplay(scoreboard);
