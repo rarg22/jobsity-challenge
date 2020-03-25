@@ -34,15 +34,19 @@ public class FileScoreRepositoryImpl implements ScoreRepository {
 
     @Value("${ftr: }")
     private String fileToRead;
+    private ScoreFileParser scoreFileParser;
 
     @Autowired
-    @Qualifier("text")
-    private ScoreFileParser txtFileParser;
+
+    public FileScoreRepositoryImpl(@Qualifier("text") ScoreFileParser scoreFileParser) {
+        this.scoreFileParser = scoreFileParser;
+
+    }
 
     @Override
     public List<Score> getScores() {
         try {
-            List<ScoreDto> scoreDtos = txtFileParser.parse(fileToRead);
+            List<ScoreDto> scoreDtos = scoreFileParser.parse(fileToRead);
             return mapScores(scoreDtos);
 
         } catch (BadInputFileException e) {
