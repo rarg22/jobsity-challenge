@@ -9,32 +9,33 @@ import java.util.stream.Collectors;
 import com.jobsity.challenge.domain.Frame;
 import com.jobsity.challenge.domain.Player;
 import com.jobsity.challenge.domain.Score;
+import com.jobsity.challenge.exception.BadInputFileException;
+import com.jobsity.challenge.exception.ScoreSortingServiceException;
 import com.jobsity.challenge.service.ScoreSortingService;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * ScoreSortingServiceImpl
  */
 @Service
 @Primary
-@Slf4j
 public class ScoreSortingServiceImpl implements ScoreSortingService {
 
     @Override
     public Map<Player, List<Frame>> arrange(List<Score> scores) {
         Map<Player, List<Frame>> framesByPlayer = new HashMap<>();
         Map<Player, List<Score>> scoresByPlayer = scores.stream().collect(Collectors.groupingBy(Score::getPlayer));
-        for (Map.Entry<Player, List<Score>> scoreByPlayer : scoresByPlayer.entrySet()) {
-            List<Score> playerScores = scoreByPlayer.getValue();
 
-            List<Frame> playerFrames = new ArrayList<>();
+        for (Map.Entry<Player, List<Score>> scoreByPlayer : scoresByPlayer.entrySet()) {
+            Player player = scoreByPlayer.getKey();
             // Initialize all 10 frames per player
+            List<Frame> playerFrames = new ArrayList<>();
             playerFrames.addAll(getFrames());
+
             int currentFrame = 1;
+            List<Score> playerScores = scoreByPlayer.getValue();
             // loop over scores to assign to corresponding frame.
             for (Score playerScore : playerScores) {
                 // get current frame and add the current score
@@ -52,9 +53,29 @@ public class ScoreSortingServiceImpl implements ScoreSortingService {
                     }
                 }
             }
+            validateFrameScores(player, playerFrames);
             framesByPlayer.put(scoreByPlayer.getKey(), playerFrames);
         }
         return framesByPlayer;
+    }
+
+    private void validateFrameScores(Player player, List<Frame> frames) throws BadInputFileException {
+        for (Frame frame : frames) {
+            int sum = frame.getScores().stream().collect(Collectors.summingInt(Score::getValue));
+            // If not the last frame, validate a maximum of 10 score per frame from all 2
+            // shots/scores
+            if (frame.getId() != 10 && sum > 10) {
+                throw new ScoreSortingServiceException(
+                        String.format("Player %s Frame %s total Score exceeds the maximum allowed. Value found: %s ",
+                                player.getName(), frame.getId(), sum));
+                // if last frame, validate a maximum of 30 score per frame from all 3
+                // shots/scores
+            } else if (sum > 30) {
+                throw new ScoreSortingServiceException(
+                        String.format("Player %s Frame %s total Score exceeds the maximum allowed. Value found: %s",
+                                player.getName(), frame.getId(), sum));
+            }
+        }
     }
 
     private List<Frame> getFrames() {

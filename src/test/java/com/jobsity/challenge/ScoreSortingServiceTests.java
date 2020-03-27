@@ -1,6 +1,7 @@
 package com.jobsity.challenge;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Map;
 import com.jobsity.challenge.domain.Frame;
 import com.jobsity.challenge.domain.Player;
 import com.jobsity.challenge.domain.Score;
+import com.jobsity.challenge.exception.ScoreSortingServiceException;
 import com.jobsity.challenge.service.ScoreSortingService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +52,13 @@ public class ScoreSortingServiceTests {
 
         assertEquals(expected, actual);
 
+    }
+
+    @Test
+    @DisplayName("TestScoreSortingServiceArrangeWithSampleInputWhenFrameTotalScoreExceeds10")
+    public void TestScoreSortingServiceArrangeWithSampleInputWhenFrameTotalScoreExceeds10() {
+        List<Score> scoreListWithExceedingFrameLimitScore = getTestScoreListInputWithExceedingFrameScore();
+        assertThrows(ScoreSortingServiceException.class, ()->scoreSortingService.arrange(scoreListWithExceedingFrameLimitScore));
     }
 
     private Map<Player, List<Frame>> getExpectedScoreSortingServiceArrangeOutput() {
@@ -97,6 +106,24 @@ public class ScoreSortingServiceTests {
 
         scores.add(new Score(john, 3, false));
         scores.add(new Score(john, 7, false));
+
+        scores.add(new Score(jeff, 0, true));
+        scores.add(new Score(jeff, 3, false));
+
+        return scores;
+
+    }
+
+    private List<Score> getTestScoreListInputWithExceedingFrameScore() {
+        List<Score> scores = new ArrayList<>();
+
+        Player jeff = new Player("Jeff");
+        Player john = new Player("John");
+
+        scores.add(new Score(jeff, 10, false));
+
+        scores.add(new Score(john, 3, false));
+        scores.add(new Score(john, 8, false));
 
         scores.add(new Score(jeff, 0, true));
         scores.add(new Score(jeff, 3, false));
