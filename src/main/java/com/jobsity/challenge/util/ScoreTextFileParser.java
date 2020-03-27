@@ -40,13 +40,14 @@ public class ScoreTextFileParser implements ScoreFileParser {
             log.info(String.format("parsing file %s", fileToRead));
             String content = Files.readString(Paths.get(fileToRead));
 
-            // split and remove any blank values
-            List<String> scoreRows = Arrays.asList(content.split("\t")).stream()
+            // split by new line char and remove any blank values
+            List<String> scoreRows = Arrays.asList(content.split("\n")).stream()
                     .filter((s) -> !s.isBlank() && !s.isEmpty()).map(s -> s.trim()).collect(Collectors.toList());
             validate(scoreRows);
             return buildScoreDtoList(scoreRows);
 
         } catch (IOException ex) {
+            log.error(String.format("failed to parse: %s", fileToRead));
             throw new BadInputFileException(ex);
         }
     }
@@ -59,7 +60,6 @@ public class ScoreTextFileParser implements ScoreFileParser {
             if (!m.matches()) {
                 throw new BadInputFileException(String.format("Found invalid score result: %s", scoreRow));
             }
-
         }
     }
 

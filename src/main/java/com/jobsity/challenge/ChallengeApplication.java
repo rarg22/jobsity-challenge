@@ -1,6 +1,5 @@
 package com.jobsity.challenge;
 
-import com.jobsity.challenge.exception.ScoreRepositoryException;
 import com.jobsity.challenge.service.ScoreboardPrinterService;
 import com.jobsity.challenge.service.ScoreboardService;
 
@@ -28,10 +27,13 @@ public class ChallengeApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
+            System.out.println();
             log.info("EXECUTING : Ten Pin Bowling Challenge Application");
             scoreboardPrinterService.print(scoreboardService.getScoreboard());
-        } catch (ScoreRepositoryException ex) {
-            log.error(ex.getClass().getName());
+            System.out.println();
+
+        } catch (Exception ex) {
+            log.error(ex.getMessage(),ex);
         }
 
     }

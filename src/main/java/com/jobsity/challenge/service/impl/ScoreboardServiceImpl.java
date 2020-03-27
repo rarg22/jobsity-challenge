@@ -35,7 +35,6 @@ public class ScoreboardServiceImpl implements ScoreboardService {
 
     @Override
     public Scoreboard getScoreboard() {
-
         List<Score> scores = scoreRepository.getScores();
         Map<Player, List<Frame>> framesByPlayers = scoreSortingService.arrange(scores);
         for (Map.Entry<Player, List<Frame>> framesByPlayer : framesByPlayers.entrySet()) {

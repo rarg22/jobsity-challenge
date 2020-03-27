@@ -1,5 +1,6 @@
 package com.jobsity.challenge.repository.impl;
 
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class FileScoreRepositoryImpl implements ScoreRepository {
             List<ScoreDto> scoreDtos = scoreFileParser.parse(fileToRead);
             return mapScores(scoreDtos);
         } catch (BadInputFileException e) {
-            throw new ScoreRepositoryException(e.getCause());
+            throw new ScoreRepositoryException(e);
         }
     }
 
