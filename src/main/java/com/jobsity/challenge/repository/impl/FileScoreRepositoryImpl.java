@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Primary
 @Repository
 @Qualifier("file")
-@Slf4j
 public class FileScoreRepositoryImpl implements ScoreRepository {
 
     @Value("${ftr: }")

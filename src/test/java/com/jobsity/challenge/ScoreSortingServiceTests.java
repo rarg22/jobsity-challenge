@@ -61,6 +61,13 @@ public class ScoreSortingServiceTests {
         assertThrows(ScoreSortingServiceException.class, ()->scoreSortingService.arrange(scoreListWithExceedingFrameLimitScore));
     }
 
+    @Test
+    @DisplayName("TestScoreSortingServiceArrangeWithSampleInputWhenFrameScoreIsNegative")
+    public void TestScoreSortingServiceArrangeWithSampleInputWhenFrameScoreIsNegative() {
+        List<Score> scoreListWithNegativeScore = getTestScoreListInputWithNegativeScore();
+        assertThrows(ScoreSortingServiceException.class, ()->scoreSortingService.arrange(scoreListWithNegativeScore));
+    }
+
     private Map<Player, List<Frame>> getExpectedScoreSortingServiceArrangeOutput() {
         Map<Player, List<Frame>> framesByPlayer = new HashMap<>();
 
@@ -127,6 +134,24 @@ public class ScoreSortingServiceTests {
 
         scores.add(new Score(jeff, 0, true));
         scores.add(new Score(jeff, 3, false));
+
+        return scores;
+
+    }
+
+    private List<Score> getTestScoreListInputWithNegativeScore() {
+        List<Score> scores = new ArrayList<>();
+
+        Player jeff = new Player("Jeff");
+        Player john = new Player("John");
+
+        scores.add(new Score(jeff, 10, false));
+
+        scores.add(new Score(john, 3, false));
+        scores.add(new Score(john, 7, false));
+
+        scores.add(new Score(jeff, 0, true));
+        scores.add(new Score(jeff, -3, false));
 
         return scores;
 

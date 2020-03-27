@@ -25,6 +25,8 @@ public class ScoreSortingServiceImpl implements ScoreSortingService {
 
     @Override
     public Map<Player, List<Frame>> arrange(List<Score> scores) {
+        validateInputScores(scores);
+
         Map<Player, List<Frame>> framesByPlayer = new HashMap<>();
         Map<Player, List<Score>> scoresByPlayer = scores.stream().collect(Collectors.groupingBy(Score::getPlayer));
 
@@ -59,7 +61,7 @@ public class ScoreSortingServiceImpl implements ScoreSortingService {
         return framesByPlayer;
     }
 
-    private void validateFrameScores(Player player, List<Frame> frames) throws BadInputFileException {
+    private void validateFrameScores(Player player, List<Frame> frames) throws ScoreSortingServiceException {
         for (Frame frame : frames) {
             int sum = frame.getScores().stream().collect(Collectors.summingInt(Score::getValue));
             // If not the last frame, validate a maximum of 10 score per frame from all 2
@@ -74,6 +76,14 @@ public class ScoreSortingServiceImpl implements ScoreSortingService {
                 throw new ScoreSortingServiceException(
                         String.format("Player %s Frame %s total Score exceeds the maximum allowed. Value found: %s",
                                 player.getName(), frame.getId(), sum));
+            }
+        }
+    }
+
+    private void validateInputScores(List<Score> scores) throws ScoreSortingServiceException {
+        for (Score score : scores) {
+            if(score.getValue() < 0){
+                throw new ScoreSortingServiceException(String.format("Negative value found for player %s. Value: %s", score.getPlayer().getName(), score.getValue()));
             }
         }
     }

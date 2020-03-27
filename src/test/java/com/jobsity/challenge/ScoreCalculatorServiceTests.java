@@ -1,13 +1,11 @@
 package com.jobsity.challenge;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.jobsity.challenge.domain.Frame;
-import com.jobsity.challenge.domain.Player;
 import com.jobsity.challenge.domain.Score;
 import com.jobsity.challenge.service.ScoreCalculatorService;
 
